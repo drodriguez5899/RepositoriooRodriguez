@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <body class="dark bg-dark" >
+        <header  id="home">
+            <h1 id="tituloI" >International Music Festival</h1>       
+        </header>
+        <div id="contenidoI" >
+            <p> <i class="fas fa-utensils"> <b>  EAT    </b> </i>&nbsp;
+                <i class="fas fa-bed"> <b>   SLEEP     </b> </i>&nbsp;
+                <i class="fab fa-napster"> <b>   RAVE   </b> </i>&nbsp;
+                <i class="fas fa-redo-alt"> <b>  REPEAT   </b> </i>&nbsp;
+                <img width="100px" src='{{ asset('imagenes/logoF2.png') }}'>
+            </p>
+            
+        </div>
+            <div style="text-align: center;margin: 20px; ">
+                <video style="border: 2px solid white;"   width="90%" controls>
+                    <source src='{{ asset('imagenes/video.mp4') }}' type="video/mp4">
+                    <source src="video.ogg" type="video/ogg">
+                    Your browser does not support HTML video.
+                </video>                
+            </div>
+            
+            <div id="bienvenido">
+                <h3 style="font-size: 75px;">BIENVENIDO
+                    {% if app.user %}
+                       {{ app.user.nombre }}
+                       {{ app.user.apellidos }}
+                    {% endif %}  
+                </h3>
+                <h5 style="font-size:35px">En esta pagina encontraras los festivales mas adecuados a tus gustos</h5>
+            </div>
+                 <hr style="color: sandybrown;">
+            <div id="fraseProximos">
+                <h1> <b>Festivales mas proximos</b></h1>
+            
+                    
+            <div id="festivalProximo">
+                {% for festivalOtro in otro %} 
+                {%  if festivalOtro.fecha == "vie, 25 jun – sáb, 26 jun"%}
+                    <h1><i class="fas fa-headphones"> <a style="text-decoration: none; color: sandybrown; " href="{{  path('ver_reggaeton',{id:festivalOtro.id}) }}"> <b> {{ festivalOtro.nombre}}</b></i> </h1>
+                    <p style="color:sandybrown;">{{ festivalOtro.frase}}</p>
+                    <div style="text-align: center">
+                        <video style="border: 2px solid white;"   width="60%" controls>
+                            <source src='{{ asset('imagenes/madrid.mp4') }}' type="video/mp4">
+                            <source src="video.ogg" type="video/ogg">
+                            Your browser does not support HTML video.
+                        </video>                            
+                    </div>
+                 </div>
+                               
+                       
+
+                    
+                                                 
+                {% endif %}  
+           {% else %}
+               No hay ningún mensaje
+       {% endfor %}
+
+            </div>
+      
+       
+       
+       
+          
+                
+                
+
+            
+            
+    </body>
+ 
+    
+
+     
+{% endblock %}

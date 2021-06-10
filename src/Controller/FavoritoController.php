@@ -9,7 +9,10 @@
 namespace App\Controller;
 use App\Entity\Favorito;
 use App\Entity\FestivalOtro;
+use App\Entity\Mensajes;
+
 use App\Entity\FestivalDestacado;
+use App\Repository\FavoritoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,6 +30,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
  * @author David
  */
 class FavoritoController extends AbstractController {
+    
+      public function __construct(FavoritoRepository $FavoritoRepository)
+    {
+        $this->FavoritoRepository = $FavoritoRepository;
+       
+    }
+    
      /**
      * @Route("/favoritos", name="favoritos")
      */
@@ -36,7 +46,9 @@ class FavoritoController extends AbstractController {
         return $this->render('favorito/index.html.twig',
                         ['favoritos' => $favoritos]);
     }
+   
     
+ 
     /**
      * @Route("/favoritos/insertar/{id}", name="insertar_favorito")
      */
@@ -51,6 +63,10 @@ class FavoritoController extends AbstractController {
                 ->getForm();
 
         $form->handleRequest($request);
+        
+        
+       
+      
         if ($form->isSubmitted() && $form->isValid()) {
             $favorito = $form->getData();
             
@@ -63,7 +79,7 @@ class FavoritoController extends AbstractController {
             $em->flush();             
             $this->addFlash(
                     'notice',
-                    'Se ha creado correctamente'
+                    'Se ha añadido correctamente'
                     );
 
             return $this->redirectToRoute('favoritos');
@@ -79,48 +95,7 @@ class FavoritoController extends AbstractController {
         return $this->redirectToRoute('favoritos');
         
     }
-     /**
-     * @Route("/favoritos/insertarOtro/{id}", name="insertar_favoritoOtro")
-     */
-    public  function insertarOtro(Request $request, FestivalOtro $otro): Response
-    {
-        $favorito2 = new Favorito();
-        $form = $this->createFormBuilder($favorito2)
-              
-                              
-                ->add('enviar', SubmitType::class,
-                        ['label' => 'Insertar favorito'])
-                ->getForm();
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $favorito2 = $form->getData();
-            
-
-            //Guardamos el nuevo cliente en la base de datos
-            $em = $this->getDoctrine()->getManager();
-            $favorito2->setFestOtro($otro);
-            $favorito2 ->setUsuario($this->getUser());
-            $em->persist($favorito2);
-            $em->flush();             
-            $this->addFlash(
-                    'notice',
-                    'Se ha creado correctamente'
-                    );
-
-            return $this->redirectToRoute('favoritos');
-        }
-
-        return $this->render('favorito/insertarFavorito2.html.twig',
-                        ['form' => $form->createView()]);
-
-
-
-
-
-        return $this->redirectToRoute('favoritos');
-        
-    }
+    
       /**
      * @Route ("/favoritos/borrar/{id}",name="borrar_favorito")
      * @return Response
